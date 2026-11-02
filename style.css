@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500&family=Barlow+Semi+Condensed:wght@600;700&display=swap");
+
+/*
+  Design idea: the page is a drawing sheet laid on a graph-paper desk.
+  Headings are set in a DIN-style condensed face (Barlow Semi Condensed),
+  the sheet gets a double-line border, and each link sits in a labelled
+  row. Works with the HTML as-is: element selectors only, no classes.
+  If the Google Fonts import is blocked, the fallback stacks take over.
+*/
+
+:root {
+  --desk: #e3eaf0;
+  --desk-grid: #cfd9e2;
+  --paper: #fcfdfe;
+  --ink: #14202b;
+  --rule-soft: #c3cfd9;
+  --link: #1741b8;
+  --note-bg: #fff4d6;
+  --note-edge: #c98a0b;
+
+  --font-heading: "Barlow Semi Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* The desk: graph paper behind the sheet */
+html {
+  background-color: var(--desk);
+  background-image:
+    linear-gradient(var(--desk-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--desk-grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* The sheet */
+body {
+  max-width: 52rem;
+  margin: clamp(1rem, 4vw, 3rem) auto;
+  padding: clamp(1.5rem, 5vw, 3.25rem);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  outline: 1px solid var(--ink);
+  outline-offset: -10px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+/* Title block */
+h1 {
+  margin: 0 0 2.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 6px solid var(--ink);
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 7vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* Project headings: a rule above each one separates the projects */
+h2 {
+  margin: 3rem 0 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 2px solid var(--ink);
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 3.5vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+/* The first project already sits under the title rule */
+h1 + h2 {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+/* The authorship note under the first heading (the only paragraph without a link) */
+h2:first-of-type + p {
+  margin-bottom: 1.75rem;
+  padding: 0.85rem 1.1rem;
+  background: var(--note-bg);
+  border-left: 4px solid var(--note-edge);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+/* Link rows: label on top, URL underneath */
+p:has(> a) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0 0 0.65rem;
+  padding: 0.55rem 0 0.55rem 1rem;
+  border-left: 3px solid var(--rule-soft);
+  font-weight: 500;
+}
+
+p:has(> a):focus-within {
+  border-left-color: var(--link);
+}
+
+a {
+  color: var(--link);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+a:focus-visible {
+  outline: 3px solid var(--link);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Small screens: tighten the frame */
+@media (max-width: 30rem) {
+  body {
+    outline-offset: -6px;
+  }
+
+  p:has(> a) {
+    padding-left: 0.75rem;
+  }
+}
+
+/* Printing or saving as PDF: drop the desk, keep the sheet clean */
+@media print {
+  html {
+    background: none;
+  }
+
+  body {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+  }
+
+  h2 {
+    break-after: avoid;
+  }
+
+  p:has(> a) {
+    break-inside: avoid;
+  }
+}
